@@ -1,0 +1,20 @@
+{
+    "resource": "/login",
+    "path": "/login",
+    "httpMethod": "POST",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "requestContext": {
+      "authorizer": {
+        "principalId": "user-id"
+      }
+    },
+    "body": "{\"username\": \"john_doe\", \"password\": \"secretpassword\"}"
+  }
+  
+
+//   {
+//   "statusCode": 401,
+//   "body": "{\"message\": \"\\ub85c\\uadf8\\uc778 \\uc2e4\\ud328\"}"
+// }

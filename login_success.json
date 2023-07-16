@@ -1,0 +1,19 @@
+{
+    "resource": "/login",
+    "path": "/login",
+    "httpMethod": "POST",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "requestContext": {
+      "authorizer": {
+        "principalId": "user-id"
+      }
+    },
+    "body": "{\"username\": \"Bucephalus\", \"password\": \"password1\", \"message\": \"로그인 성공\"}"
+  }
+
+//   {
+//     "statusCode": 200,
+//     "body": "{\"message\": \"\\ub85c\\uadf8\\uc778 \\uc131\\uacf5\", \"access_token\": \"Bucephalus:gDWmzjmeKxFEFxog\"}"
+//   }
