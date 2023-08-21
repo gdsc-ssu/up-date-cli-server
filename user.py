@@ -1,40 +1,52 @@
-import pymysql
+from sqlalchemy import create_engine, Column, String, DateTime
+from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.ext.declarative import declarative_base
+from datetime import datetime
 import dbinfo
-
 from response import get_success_schema, get_error_schema
+from datetime_util import format_datetime
 
-connection = pymysql.connect(
-    host=dbinfo.db_host,
-    user=dbinfo.db_username,
-    passwd=dbinfo.db_password,
-    db=dbinfo.db_name,
-    port=dbinfo.db_port
-)
+# MySQL 연결 정보 설정
+db_url = f"mysql+pymysql://{dbinfo.db_username}:{dbinfo.db_password}@{dbinfo.db_host}:{dbinfo.db_port}/{dbinfo.db_name}"
 
-cursor = connection.cursor()  # DB에 접속 및 DB 객체를 가져옴
+# SQLAlchemy 엔진 생성
+engine = create_engine(db_url)
+
+# 세션 생성
+Session = sessionmaker(bind=engine)
+session = Session()
+
+# SQLAlchemy 모델 정의
+Base = declarative_base()
+
+class User(Base):
+    __tablename__ = 'users'
+    id = Column(String(255), primary_key=True)
+    created_at = Column(DateTime, nullable=False, default=datetime.now)
+    updated_at = Column(DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
 
 
-def get_user(path_parameters):
-    query = f"""
-select
-    u.id,
-    u.email
-from
-    users u
-where
-    u.id = '{path_parameters['id']}';
-    """
+def get_user_by_id(path_parameters):
+    user = session.query(User).filter_by(id=path_parameters["id"]).first()
 
-    cursor.execute(query)
-    rows = list(cursor.fetchall())
-
-    if len(rows) == 0:
-        return get_error_schema(404, '존재하지 않는 유저입니다.')
-    else:
-        user = rows[0]
+    if user:
         result = {
-            'id': user[0],
-            'email': user[1]
+            "id": user.id,
+            "created_at": format_datetime(user.created_at)
         }
 
         return get_success_schema(200, result)
+    else:
+        return get_error_schema(404, '존재하지 않는 유저입니다.')
+
+def create_user(request_body):
+    new_user = User(id=request_body['id'])
+    session.add(new_user)
+    session.commit()
+
+    result = {
+        "id": new_user.id,
+        "created_at": format_datetime(new_user.created_at)
+    }
+
+    return get_success_schema(200, result)
