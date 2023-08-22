@@ -1,2 +1,3 @@
 # Ignore dbinfo.py
 dbinfo.py
+*.zip
