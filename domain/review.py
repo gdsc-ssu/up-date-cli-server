@@ -44,6 +44,7 @@ def retrieve_reviews(reviews):
             review_data = {
                 "id": review.id,
                 "userId": review.user_id,
+                "content": review.content,
                 "createdAt": format_datetime(review.created_at)
             }
             result.append(review_data)
