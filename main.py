@@ -1,8 +1,8 @@
 from sqlalchemy import create_engine, Column, String, DateTime
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 import dbinfo
-from response import get_success_schema, get_error_schema
+from util.response import get_success_schema, get_error_schema
 
 # MySQL 연결 정보 설정
 db_url = f"mysql+pymysql://{dbinfo.db_username}:{dbinfo.db_password}@{dbinfo.db_host}:{dbinfo.db_port}/{dbinfo.db_name}"
